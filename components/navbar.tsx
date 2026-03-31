@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Sparkles } from "lucide-react"
@@ -9,6 +10,12 @@ interface NavbarProps {
 }
 
 export function Navbar({ isMember = true }: NavbarProps) {
+  const router = useRouter()
+
+  const handleAvatarClick = () => {
+    router.push("/membership")
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -33,7 +40,11 @@ export function Navbar({ isMember = true }: NavbarProps) {
           >
             {isMember ? "会员" : "试用"}
           </Badge>
-          <Avatar className="h-9 w-9 ring-2 ring-border/50 transition-all hover:ring-primary/50">
+          <Avatar 
+            className="h-9 w-9 ring-2 ring-border/50 transition-all hover:ring-primary/50 cursor-pointer"
+            onClick={handleAvatarClick}
+            title="进入会员中心"
+          >
             <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=learnpal" alt="用户头像" />
             <AvatarFallback className="bg-gradient-to-br from-blue-100 to-cyan-100 text-blue-600">
               LP

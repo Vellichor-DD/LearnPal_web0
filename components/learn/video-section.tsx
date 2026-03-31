@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { 
   FileText, 
   Sparkles, 
@@ -15,7 +16,9 @@ import {
   Pencil,
   Check,
   X,
-  Trash2
+  Trash2,
+  Maximize2,
+  Minimize2
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -59,6 +62,7 @@ export function VideoSection({ knowledgeTitle }: VideoSectionProps) {
   const [showAddForm, setShowAddForm] = useState(false)
   const [newLinkTitle, setNewLinkTitle] = useState("")
   const [newLinkUrl, setNewLinkUrl] = useState("")
+  const [isNotesMaximized, setIsNotesMaximized] = useState(false)
 
   const handleUpload = () => {
     console.log("[v0] 上传素材")
@@ -126,7 +130,7 @@ export function VideoSection({ knowledgeTitle }: VideoSectionProps) {
   return (
     <div className="flex h-full flex-col gap-4">
       {/* 课程链接区域 - 1/4高度 */}
-      <Card className="border-border/50 bg-card/80 backdrop-blur-sm flex flex-col" style={{ flex: "0 0 25%" }}>
+      <Card className="border-border/50 bg-card/80 backdrop-blur-sm flex flex-col" style={{ flex: isNotesMaximized ? "0 0 0%" : "0 0 25%", display: isNotesMaximized ? "none" : "flex" }}>
         <CardHeader className="py-2 px-3 shrink-0">
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2 text-sm">
@@ -165,71 +169,73 @@ export function VideoSection({ knowledgeTitle }: VideoSectionProps) {
         </CardHeader>
         <CardContent className="flex-1 flex flex-col gap-0.5 px-3 pb-2 pt-0 min-h-0">
           {/* 链接列表 - 可滚动区域 */}
-          <div className="flex-1 overflow-y-auto space-y-0.5 min-h-0">
-          {links.map((link) => (
-            <div
-              key={link.id}
-              className="group flex items-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 transition-all hover:border-border hover:bg-muted/30"
-            >
-              {editingId === link.id ? (
-                <>
-                  <Input
-                    value={editingTitle}
-                    onChange={(e) => setEditingTitle(e.target.value)}
-                    className="h-7 flex-1 text-sm"
-                    autoFocus
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") saveEditing()
-                      if (e.key === "Escape") cancelEditing()
-                    }}
-                  />
-                  <Button size="icon" variant="ghost" className="h-7 w-7" onClick={saveEditing}>
-                    <Check className="h-3.5 w-3.5 text-green-600" />
-                  </Button>
-                  <Button size="icon" variant="ghost" className="h-7 w-7" onClick={cancelEditing}>
-                    <X className="h-3.5 w-3.5 text-red-600" />
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={() => handleOpenLink(link)}
-                    className="flex flex-1 items-center gap-2 text-left text-sm text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <ExternalLink className="h-3.5 w-3.5 shrink-0" />
-                    <span className="truncate">{link.title}</span>
-                  </button>
-                  <span className={cn(
-                    "shrink-0 rounded-full px-2 py-0.5 text-xs font-medium",
-                    link.type === "recommended" 
-                      ? "bg-blue-100 text-blue-700" 
-                      : "bg-green-100 text-green-700"
-                  )}>
-                    {link.type === "recommended" ? "推荐" : "自定义"}
-                  </span>
-                  <div className="flex opacity-0 transition-opacity group-hover:opacity-100">
-                    <Button 
-                      size="icon" 
-                      variant="ghost" 
-                      className="h-7 w-7"
-                      onClick={() => startEditing(link)}
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                    </Button>
-                    <Button 
-                      size="icon" 
-                      variant="ghost" 
-                      className="h-7 w-7 text-red-600 hover:text-red-700"
-                      onClick={() => deleteLink(link.id)}
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
-                  </div>
-                </>
-              )}
+          <ScrollArea className="flex-1 min-h-0 pr-2">
+            <div className="space-y-0.5">
+              {links.map((link) => (
+                <div
+                  key={link.id}
+                  className="group flex items-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 transition-all hover:border-border hover:bg-muted/30"
+                >
+                  {editingId === link.id ? (
+                    <>
+                      <Input
+                        value={editingTitle}
+                        onChange={(e) => setEditingTitle(e.target.value)}
+                        className="h-7 flex-1 text-sm"
+                        autoFocus
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") saveEditing()
+                          if (e.key === "Escape") cancelEditing()
+                        }}
+                      />
+                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={saveEditing}>
+                        <Check className="h-3.5 w-3.5 text-green-600" />
+                      </Button>
+                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={cancelEditing}>
+                        <X className="h-3.5 w-3.5 text-red-600" />
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => handleOpenLink(link)}
+                        className="flex flex-1 items-center gap-2 text-left text-sm text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                        <span className="truncate">{link.title}</span>
+                      </button>
+                      <span className={cn(
+                        "shrink-0 rounded-full px-2 py-0.5 text-xs font-medium",
+                        link.type === "recommended" 
+                          ? "bg-blue-100 text-blue-700" 
+                          : "bg-green-100 text-green-700"
+                      )}>
+                        {link.type === "recommended" ? "推荐" : "自定义"}
+                      </span>
+                      <div className="flex opacity-0 transition-opacity group-hover:opacity-100">
+                        <Button 
+                          size="icon" 
+                          variant="ghost" 
+                          className="h-7 w-7"
+                          onClick={() => startEditing(link)}
+                        >
+                          <Pencil className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button 
+                          size="icon" 
+                          variant="ghost" 
+                          className="h-7 w-7 text-red-600 hover:text-red-700"
+                          onClick={() => deleteLink(link.id)}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
-          </div>
+          </ScrollArea>
 
           {/* 添加自定义链接 - 固定在底部 */}
           <div className="shrink-0 pt-1 border-t border-border/30">
@@ -272,17 +278,28 @@ export function VideoSection({ knowledgeTitle }: VideoSectionProps) {
       </Card>
 
       {/* 笔记区域 - 3/4高度 */}
-      <Card className="border-border/50 bg-card/80 backdrop-blur-sm flex flex-col" style={{ flex: "1 1 75%" }}>
+      <Card className="border-border/50 bg-card/80 backdrop-blur-sm flex flex-col" style={{ flex: isNotesMaximized ? "1 1 100%" : "1 1 75%" }}>
         <CardHeader className="pb-3 shrink-0">
-          <CardTitle className="flex items-center gap-2 text-base">
-            <FileText className="h-5 w-5 text-primary" />
-            学习笔记
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <FileText className="h-5 w-5 text-primary" />
+              学习笔记
+            </CardTitle>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setIsNotesMaximized(!isNotesMaximized)}
+              title={isNotesMaximized ? "恢复" : "最大化"}
+            >
+              {isNotesMaximized ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="flex flex-1 flex-col gap-3 min-h-0">
-          {/* 笔记内容 */}
-          <div className="flex-1 overflow-y-auto rounded-lg bg-muted/50 p-3 min-h-0">
-            <div className="prose prose-sm max-w-none text-foreground">
+          {/* 笔记内容 - 使用 ScrollArea */}
+          <ScrollArea className="flex-1 rounded-lg bg-muted/50 p-3 min-h-0">
+            <div className="prose prose-sm max-w-none text-foreground pr-3">
               {sampleNotes.split('\n').map((line, i) => {
                 if (line.startsWith('## ')) {
                   return <h3 key={i} className="mt-3 first:mt-0 mb-2 text-sm font-semibold text-foreground">{line.replace('## ', '')}</h3>
@@ -307,7 +324,7 @@ export function VideoSection({ knowledgeTitle }: VideoSectionProps) {
                 return null
               })}
             </div>
-          </div>
+          </ScrollArea>
 
           {/* 操作按钮 */}
           <div className="flex gap-2 shrink-0">

@@ -35,9 +35,9 @@ export default function HomePage() {
     router.push(`/learn/${taskId}`)
   }
 
-  const handleReviewTalk = (taskTitle: string) => {
+  const handleReviewTalk = (taskId: string, taskTitle: string) => {
     console.log(`[v0] 进入复习Talk: ${taskTitle}`)
-    alert(`正在进入「${taskTitle}」复习Talk模式...\n\n通过对话巩固所学知识！`)
+    router.push(`/review/${taskId}`)
   }
 
   return (
@@ -74,7 +74,7 @@ export default function HomePage() {
                 image={task.image}
                 progress={task.progress}
                 onStartLearning={() => handleStartLearning(task.id, task.title)}
-                onReviewTalk={() => handleReviewTalk(task.title)}
+                onReviewTalk={() => handleReviewTalk(task.id, task.title)}
               />
             ))}
           </div>

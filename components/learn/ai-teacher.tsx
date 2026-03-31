@@ -3,7 +3,8 @@
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Bot, MessageCircle, FileText, Send, History } from "lucide-react"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Bot, MessageCircle, FileText, Send, History, Maximize2, Minimize2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface Message {
@@ -21,6 +22,7 @@ export function AITeacher() {
   const [mode, setMode] = useState<"ask" | "review">("ask")
   const [inputValue, setInputValue] = useState("")
   const [messages] = useState<Message[]>(sampleMessages)
+  const [isMaximized, setIsMaximized] = useState(false)
 
   const handleSend = () => {
     if (!inputValue.trim()) return
@@ -35,13 +37,24 @@ export function AITeacher() {
   }
 
   return (
-    <div className="flex h-full flex-col gap-4">
-      <Card className="flex-1 border-border/50 bg-card/80 backdrop-blur-sm flex flex-col">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Bot className="h-5 w-5 text-primary" />
-            AI老师
-          </CardTitle>
+    <div className={cn("flex flex-col gap-4", isMaximized ? "fixed inset-4 z-50" : "h-full")}>
+      <Card className={cn("flex-1 border-border/50 bg-card/80 backdrop-blur-sm flex flex-col", isMaximized && "bg-background/95")}>
+        <CardHeader className="pb-3 shrink-0">
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Bot className="h-5 w-5 text-primary" />
+              AI老师
+            </CardTitle>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setIsMaximized(!isMaximized)}
+              title={isMaximized ? "恢复" : "最大化"}
+            >
+              {isMaximized ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+            </Button>
+          </div>
           <div className="flex gap-2 mt-2">
             <Button
               variant={mode === "ask" ? "default" : "outline"}
@@ -69,29 +82,31 @@ export function AITeacher() {
             </Button>
           </div>
         </CardHeader>
-        <CardContent className="flex-1 flex flex-col gap-3 overflow-hidden">
-          <div className="flex-1 overflow-y-auto space-y-3 min-h-0">
-            {messages.map((msg, i) => (
-              <div
-                key={i}
-                className={cn(
-                  "flex",
-                  msg.role === "user" ? "justify-end" : "justify-start"
-                )}
-              >
+        <CardContent className="flex-1 flex flex-col gap-3 overflow-hidden min-h-0">
+          <ScrollArea className="flex-1 min-h-0 pr-2">
+            <div className="space-y-3">
+              {messages.map((msg, i) => (
                 <div
+                  key={i}
                   className={cn(
-                    "max-w-[85%] rounded-2xl px-3 py-2 text-sm",
-                    msg.role === "user"
-                      ? "bg-primary text-primary-foreground rounded-br-md"
-                      : "bg-muted text-foreground rounded-bl-md"
+                    "flex",
+                    msg.role === "user" ? "justify-end" : "justify-start"
                   )}
                 >
-                  {msg.content}
+                  <div
+                    className={cn(
+                      "max-w-[85%] rounded-2xl px-3 py-2 text-sm",
+                      msg.role === "user"
+                        ? "bg-primary text-primary-foreground rounded-br-md"
+                        : "bg-muted text-foreground rounded-bl-md"
+                    )}
+                  >
+                    {msg.content}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </ScrollArea>
 
           <div className="flex gap-2">
             <input

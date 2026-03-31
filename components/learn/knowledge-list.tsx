@@ -1,6 +1,7 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { BookOpen, CheckCircle2, Circle, PlayCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -47,52 +48,56 @@ export function KnowledgeList({ items, currentId, onSelect }: KnowledgeListProps
           学习路径
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-2">
-        {items.map((item) => (
-          <div
-            key={item.id}
-            onClick={() => {
-              console.log(`[v0] 选择知识点: ${item.name}`)
-              onSelect(item.id)
-            }}
-            className={cn(
-              "flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-all hover:bg-muted/50",
-              currentId === item.id 
-                ? "border-primary bg-primary/5 shadow-sm" 
-                : "border-transparent"
-            )}
-          >
-            {/* 状态图标 */}
-            <div className="flex-shrink-0">
-              {statusConfig[item.status].icon}
-            </div>
-            
-            {/* 主内容 */}
-            <div className="min-w-0 flex-1">
-              <p className={cn(
-                "text-sm font-medium truncate",
-                currentId === item.id ? "text-primary" : "text-foreground"
-              )}>
-                {item.name}
-              </p>
-              <div className="mt-1 flex items-center gap-2">
-                <span className={cn(
-                  "rounded-full border px-2 py-0.5 text-xs font-medium",
-                  importanceColors[item.importance]
-                )}>
-                  {item.importance}
-                </span>
-                <span className={cn(
-                  "text-xs",
-                  item.status === "completed" ? "text-green-600" :
-                  item.status === "learning" ? "text-blue-600" : "text-muted-foreground"
-                )}>
-                  {statusConfig[item.status].label}
-                </span>
+      <CardContent className="p-0">
+        <ScrollArea className="h-[calc(100vh-280px)] px-6 pb-6">
+          <div className="space-y-2 pr-3">
+            {items.map((item) => (
+              <div
+                key={item.id}
+                onClick={() => {
+                  console.log(`[v0] 选择知识点: ${item.name}`)
+                  onSelect(item.id)
+                }}
+                className={cn(
+                  "flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-all hover:bg-muted/50",
+                  currentId === item.id 
+                    ? "border-primary bg-primary/5 shadow-sm" 
+                    : "border-transparent"
+                )}
+              >
+                {/* 状态图标 */}
+                <div className="flex-shrink-0">
+                  {statusConfig[item.status].icon}
+                </div>
+                
+                {/* 主内容 */}
+                <div className="min-w-0 flex-1">
+                  <p className={cn(
+                    "text-sm font-medium truncate",
+                    currentId === item.id ? "text-primary" : "text-foreground"
+                  )}>
+                    {item.name}
+                  </p>
+                  <div className="mt-1 flex items-center gap-2">
+                    <span className={cn(
+                      "rounded-full border px-2 py-0.5 text-xs font-medium",
+                      importanceColors[item.importance]
+                    )}>
+                      {item.importance}
+                    </span>
+                    <span className={cn(
+                      "text-xs",
+                      item.status === "completed" ? "text-green-600" :
+                      item.status === "learning" ? "text-blue-600" : "text-muted-foreground"
+                    )}>
+                      {statusConfig[item.status].label}
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
-        ))}
+        </ScrollArea>
       </CardContent>
     </Card>
   )
