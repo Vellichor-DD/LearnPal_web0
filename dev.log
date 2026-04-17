@@ -1,0 +1,18 @@
+
+> my-project@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.0 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.83:3000
+✓ Ready in 490ms
+
+ GET / 200 in 288ms (next.js: 152ms, application-code: 136ms)
+ GET /learn/1 200 in 587ms (next.js: 465ms, application-code: 122ms)
+ GET /review/1 200 in 564ms (next.js: 477ms, application-code: 87ms)
+Each child in a list should have a unique "key" prop.
+
+Check the render method of `MembershipPage`. See https://react.dev/link/warning-keys for more information.
+ GET /membership 200 in 216ms (next.js: 58ms, application-code: 158ms)
+ GET / 200 in 53ms (next.js: 4ms, application-code: 49ms)
+^C^C

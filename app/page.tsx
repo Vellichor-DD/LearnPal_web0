@@ -9,7 +9,7 @@ import { BookOpen } from "lucide-react"
 const learningTasks = [
   {
     id: "1",
-    title: "转行AI产品经理",
+    title: "AI产品经理",
     image: "/images/ai-product-manager.jpg",
     progress: 60
   },
@@ -21,9 +21,9 @@ const learningTasks = [
   },
   {
     id: "3",
-    title: "数据分析入门",
+    title: "数据分析",
     image: "/images/data-analysis.jpg",
-    progress: 0
+    progress: 70
   }
 ]
 
@@ -45,13 +45,10 @@ export default function HomePage() {
       <Navbar isMember={true} />
       
       {/* 主内容区 */}
-      <main className="container mx-auto px-4 pb-64 pt-8">
+      <main className="container mx-auto px-4 pb-64 pt-6">
         {/* 欢迎区域 */}
-        <div className="mb-8">
-          <h1 className="mb-2 text-2xl font-bold text-foreground">
-            继续学习
-          </h1>
-          <p className="text-muted-foreground">
+        <div className="mb-4">
+          <p className="text-muted-foreground text-sm">
             每天进步一点点，成就更好的自己
           </p>
         </div>
